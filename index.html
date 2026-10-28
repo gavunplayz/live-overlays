@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GP48 Live Counters</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --panel: rgba(10, 14, 24, .94);
+    --muted: #aab4c7;
+    --text: #f7f9ff;
+    --youtube: #ff1744;
+    --twitch: #a970ff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; min-height: 100%; background: transparent; }
+  body {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text);
+    padding: 8px;
+  }
+  .stack { display: flex; flex-direction: column; gap: 10px; width: min(100%, 510px); }
+  .counter {
+    position: relative; overflow: hidden; display: grid;
+    grid-template-columns: 5px 48px minmax(0,1fr) auto;
+    align-items: center; gap: 15px;
+    min-height: 98px; padding: 17px 19px 17px 0;
+    border: 1px solid rgba(255,255,255,.12); border-radius: 17px;
+    background: var(--panel);
+    box-shadow: 0 12px 35px rgba(0,0,0,.22);
+    backdrop-filter: blur(12px);
+    animation: appear .45s ease-out both;
+  }
+  .counter::after {
+    content: ""; position: absolute; width: 180px; height: 180px;
+    right: -80px; top: -100px; border-radius: 50%;
+    background: var(--accent); opacity: .12; filter: blur(30px); pointer-events: none;
+  }
+  .rail { align-self: stretch; background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+  .brand { width: 48px; height: 48px; border-radius: 13px; display:grid; place-items:center; background:var(--accent); color:white; }
+  .brand svg { width: 27px; height: 27px; fill: currentColor; }
+  .details { min-width: 0; }
+  .label { color: var(--muted); font-size: 11px; line-height: 1.2; letter-spacing: .16em; font-weight: 800; text-transform: uppercase; }
+  .handle { color: #e2e7f2; font-size: 12px; margin-top: 5px; opacity: .82; }
+  .count { position: relative; z-index: 1; font-size: clamp(23px, 5vw, 34px); line-height: 1; letter-spacing: -.045em; font-weight: 850; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .status { display:flex; align-items:center; gap:6px; margin-left: 8px; color:#b8c2d4; font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+  .dot { width:6px; height:6px; border-radius:50%; background:#52e6a5; box-shadow:0 0 10px #52e6a5; }
+  .counter.youtube { --accent: var(--youtube); }
+  .counter.twitch { --accent: var(--twitch); animation-delay: .08s; }
+  .counter.hidden { display:none; }
+  .error { display:none; max-width:510px; padding:8px 11px; color:#f7c7cd; background:rgba(80,18,30,.88); border:1px solid rgba(255,70,95,.3); border-radius:9px; font-size:11px; }
+  .error.visible { display:block; }
+  @keyframes appear { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.55; } }
+  .loading .count { animation:pulse 1.2s ease-in-out infinite; }
+  @media (max-width:380px) {
+    .counter { grid-template-columns:4px 40px minmax(0,1fr); gap:11px; padding-right:12px; }
+    .brand { width:40px; height:40px; }
+    .status { display:none; }
+    .count { font-size:25px; }
+    .label { font-size:10px; }
+  }
+</style>
+</head>
+<body>
+<main class="stack" aria-label="Live social counters">
+  <section class="counter youtube" id="youtube-card">
+    <div class="rail"></div>
+    <div class="brand" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg>
+    </div>
+    <div class="details">
+      <div class="label">YouTube subscribers</div>
+      <div class="handle">@GP48YT</div>
+    </div>
+    <div class="count" id="youtube-count">Loading</div>
+    <div class="status"><span class="dot"></span><span id="youtube-status">Loading</span></div>
+  </section>
+  <section class="counter twitch" id="twitch-card">
+    <div class="rail"></div>
+    <div class="brand" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M4.3 2 1 6.2v14.1h5.5V23h3.3l3.3-2.7h4.4L23 14V2H4.3Zm16.5 11-3.3 3.3H12l-2.7 2.2v-2.2H5.4V4.2h15.4V13ZM14.3 6.4h2.2v6.1h-2.2V6.4Zm-5.5 0H11v6.1H8.8V6.4Z"/></svg>
+    </div>
+    <div class="details">
+      <div class="label">Twitch followers</div>
+      <div class="handle">twitch.tv/gavunplayz</div>
+    </div>
+    <div class="count" id="twitch-count">Loading</div>
+    <div class="status"><span class="dot"></span><span id="twitch-status">Loading</span></div>
+  </section>
+  <div class="error" id="error-message" role="status"></div>
+</main>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  if (params.get("youtube") === "0") document.getElementById("youtube-card").classList.add("hidden");
+  if (params.get("twitch") === "0") document.getElementById("twitch-card").classList.add("hidden");
+  const dataUrl = new URL("counts.json", location.href);
+  const fmt = new Intl.NumberFormat("en-US");
+  const errorEl = document.getElementById("error-message");
+  let lastData = null;
+
+  function setCount(platform, value, updatedAt) {
+    const countEl = document.getElementById(platform + "-count");
+    const statusEl = document.getElementById(platform + "-status");
+    if (Number.isFinite(Number(value))) {
+      const next = fmt.format(Number(value));
+      if (countEl.textContent !== next) {
+        countEl.animate([{opacity:.35, transform:"translateY(3px)"},{opacity:1, transform:"translateY(0)"}], {duration:260, easing:"ease-out"});
+        countEl.textContent = next;
+      }
+      statusEl.textContent = "Updated";
+      statusEl.parentElement.title = updatedAt ? "Last updated: " + new Date(updatedAt).toLocaleString() : "Count updated";
+    } else {
+      countEl.textContent = "—";
+      statusEl.textContent = "Unavailable";
+    }
+  }
+
+  async function refresh() {
+    try {
+      const response = await fetch(dataUrl.href + "?_=" + Date.now(), {cache:"no-store"});
+      if (!response.ok) throw new Error("Could not load counts.json (" + response.status + ")");
+      const data = await response.json();
+      lastData = data;
+      setCount("youtube", data.youtube && data.youtube.subscribers, data.updatedAt);
+      setCount("twitch", data.twitch && data.twitch.followers, data.updatedAt);
+      errorEl.classList.remove("visible");
+      if (data.error) {
+        errorEl.textContent = data.error;
+        errorEl.classList.add("visible");
+      }
+    } catch (error) {
+      if (!lastData) {
+        document.getElementById("youtube-count").textContent = "—";
+        document.getElementById("twitch-count").textContent = "—";
+        document.getElementById("youtube-status").textContent = "Offline";
+        document.getElementById("twitch-status").textContent = "Offline";
+      }
+      errorEl.textContent = "Waiting for count data. Check the GitHub Actions setup.";
+      errorEl.classList.add("visible");
+    }
+  }
+  refresh();
+  setInterval(refresh, 30000);
+})();
+</script>
+</body>
+</html>
