@@ -1,10 +1,10 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-10-28T00:36:22.743096+00:00",
   "youtube": {
-    "subscribers": null
+    "subscribers": 119
   },
   "twitch": {
-    "followers": null
+    "followers": 11
   },
-  "error": "Counter data has not been fetched yet. Complete the GitHub Actions secrets setup."
+  "error": null
 }
