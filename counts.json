@@ -1,0 +1,10 @@
+{
+  "updatedAt": null,
+  "youtube": {
+    "subscribers": null
+  },
+  "twitch": {
+    "followers": null
+  },
+  "error": "Counter data has not been fetched yet. Complete the GitHub Actions secrets setup."
+}
